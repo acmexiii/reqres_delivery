@@ -3,12 +3,12 @@ pipeline {
 
     environment {
         REGION = 'ap-northeast-2'
-        EKS_API = 'EKS Cluster Api Server 엔드포인트'
-        EKS_CLUSTER_NAME = 'EKS Cluster 이름'
-        EKS_JENKINS_CREDENTIAL_ID = 'Kubernetes Credential ID'
-        ECR_PATH = 'ECR Repository URI 작성 /repository-name은 제거'
-        ECR_IMAGE = '이미지 이름'
-        AWS_CREDENTIAL_ID = 'AWS Credential ID'
+        EKS_API = 'https://A854A56A9E8DC64E6BBFD91B57621678.gr7.ap-northeast-2.eks.amazonaws.com'
+        EKS_CLUSTER_NAME = 'test-eks'
+        EKS_JENKINS_CREDENTIAL_ID = 'kube-cred'
+        ECR_PATH = '879772956301.dkr.ecr.ap-northeast-2.amazonaws.com'
+        ECR_IMAGE = 'test-product'
+        AWS_CREDENTIAL_ID = 'AWS-Cred'
     }
     stages {
         stage('Clone Repository') {
