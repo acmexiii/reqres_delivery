@@ -18,7 +18,9 @@ pipeline {
         }
         stage('Maven Build') {
             steps {
-                sh 'mvn package -DskipTests'
+                withMaven(maven: 'Maven') {
+                    sh 'mvn package -DskipTests'
+                }
             }
         }
         stage('Docker Build') {
