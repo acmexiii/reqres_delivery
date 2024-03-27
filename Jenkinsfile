@@ -29,7 +29,7 @@ pipeline {
                     docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
                         image = docker.build("${ECR_PATH}/${ECR_IMAGE}")
                     }
-                }
+                } 
             } 
         }
         stage('Push to ECR') {
