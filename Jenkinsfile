@@ -37,7 +37,6 @@ pipeline {
                 script {
                     docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
                         image.push("${ECR_IMAGE}:v${env.BUILD_NUMBER}")
-                        image.push("${ECR_IMAGE}:latest")
                     }
                 }
             }
