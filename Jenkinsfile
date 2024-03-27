@@ -35,7 +35,7 @@ pipeline {
         stage('Push to ECR') {
             steps {
                 script {
-                    docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
+                    docker.withRegistry("https://${ECR_PATH}", "${AWS_CREDENTIAL_ID}") {
                         image.push("${ECR_IMAGE}:v${env.BUILD_NUMBER}")
                     }
                 }
