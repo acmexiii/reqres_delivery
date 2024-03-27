@@ -30,7 +30,7 @@ pipeline {
                         image = docker.build("${ECR_PATH}/${ECR_IMAGE}")
                     }
                 } 
-            } 
+            }  
         }
         stage('Push to ECR') {
             steps {
