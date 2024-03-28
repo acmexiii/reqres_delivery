@@ -57,6 +57,7 @@ pipeline {
                             sh "sed 's/latest/v${env.BUILD_ID}/g' kubernetes/deploy.yaml > output.yaml"
                             sh "cat output.yaml"
                             sh "aws eks --region ${REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
+                            sh "cat /var/lib/jenkins/workspace/Product Pipeline/.kube*config"
                             sh "kubectl apply -f output.yaml"
                             sh "kubectl apply -f kubernetes/service.yaml"
                             sh "rm output.yaml"
