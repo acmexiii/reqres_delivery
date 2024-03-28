@@ -55,7 +55,7 @@ pipeline {
                                         serverUrl: "${EKS_API}",
                                         clusterName: "${EKS_CLUSTER_NAME}"]) {
                             sh "sed 's/latest/v${env.BUILD_ID}/g' kubernetes/deploy.yaml > output.yaml"
-                            sh "kubectl --version"
+                            sh "kubectl version"
                             sh "aws eks --region ${REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
                             sh "kubectl apply -f output.yaml"
                             sh "kubectl apply -f kubernetes/service.yaml"
