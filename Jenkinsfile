@@ -49,14 +49,25 @@ pipeline {
         }
         stage('Deploy to k8s') {
             steps {
-                withKubeConfig([credentialsId: "${EKS_JENKINS_CREDENTIAL_ID}",
-                                serverUrl: "${EKS_API}",
-                                clusterName: "${EKS_CLUSTER_NAME}"]) {
-                    sh "sed 's/latest/v${env.BUILD_ID}/g' kubernetes/deploy.yaml > output.yaml"
-                    sh "aws eks --region ${REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
-                    sh "kubectl apply -f output.yaml"
-                    sh "kubectl apply -f kubernetes/service.yaml"
-                    sh "rm output.yaml"
+                script {
+                    // AWS 자격 증명을 가져오기
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${AWS_CREDENTIAL_ID}", accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                        // Kubernetes에 접근을 위한 kubeconfig 설정
+                        withKubeConfig([credentialsId: "${EKS_JENKINS_CREDENTIAL_ID}",
+                                        serverUrl: "${EKS_API}",
+                                        clusterName: "${EKS_CLUSTER_NAME}"]) {
+                            // 배포할 YAML 파일을 빌드 ID에 맞게 수정
+                            sh "sed 's/latest/v${env.BUILD_ID}/g' kubernetes/deploy.yaml > output.yaml"
+                            // AWS CLI를 사용하여 kubeconfig 설정 업데이트
+                            sh "aws eks --region ${REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
+                            // Kubernetes에 배포
+                            sh "kubectl apply -f output.yaml"
+                            // Kubernetes에 서비스 배포
+                            sh "kubectl apply -f kubernetes/service.yaml"
+                            // 임시로 생성한 파일 삭제
+                            sh "rm output.yaml"
+                        }
+                    }
                 }
             }
         }
