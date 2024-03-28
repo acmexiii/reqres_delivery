@@ -50,18 +50,15 @@ pipeline {
         stage('Deploy to k8s') {
             steps {
                 script {
-                    //withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${AWS_CREDENTIAL_ID}", accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                         withKubeConfig([credentialsId: "${EKS_JENKINS_CREDENTIAL_ID}",
                                         serverUrl: "${EKS_API}",
                                         clusterName: "${EKS_CLUSTER_NAME}"]) {
                             sh "sed 's/latest/v${env.BUILD_ID}/g' kubernetes/deploy.yaml > output.yaml"
                             sh "cat output.yaml"
-                   //         sh "aws eks --region ${REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}"
                             sh "kubectl apply -f output.yaml"
                             sh "kubectl apply -f kubernetes/service.yaml"
                             sh "rm output.yaml"
                         }
-                  //  }
                 }
             }
         } 
